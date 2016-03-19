@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fff333</color>
+    <color name="colorPrimaryDark">#33ff33</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="main_bg">#039aaa</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#263238</color>
+    <color name="light_black">#616161</color>
+    <color name="light_gray">#CFD8DC</color>
+
+    <color name="list_title">#424242</color>
+    <color name="list_subtitle">#828282</color>
+    <color name="deep_orange">#FF5722</color>
+
+    <color name="left_menu_bottom_bg">#E0E0E0</color>
+    <color name="line_bg">#BDBDBD</color>
+    <color name="bottom_rocord_bg">#F5F5F5</color>
+
+    <color name="trans">#00000000</color>
+    <color name="save_btn_normal">#448AFF</color>
+    <color name="save_btn_press">#2962FF</color>
+    <!--命名参见https://www.google.com/design/spec/style/color.html#color-color-palette 颜色代码程度值-->
+    <color name="grey_2">#F5F5F5</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="label_delete_normal">#FD3D2E</color>
+    <color name="label_delete_press">#B71C1C</color>
+    <color name="label_edit_normal">#C5C8CA</color>
+    <color name="label_edit_press">#9E9E9E</color>
+    <color name="blue">#01579B</color>
+    <color name="pink">#CDDC39</color>
+
+
+    <!--日历控件-->
+    <color name="normal_day">#ff999999</color>
+    <color name="selected_day_background">#E75F49</color>
+    <color name="selected_day_text">#fff2f2f2</color>
+
+    <color name="white_normal">#eeeeee</color>
+    <color name="text_normal">#727476</color>
+    <color name="text_select">#2d89d9</color>
+    <color name="logo_fill_color">#000000</color>
+
+    <color name="common_bg">#f8f8f8</color>
+    <color name="common_bg0">#e6e6e6</color>
+    <color name="common_bg1">#fafafa</color>
+    <color name="color_item_normal">#acd6ff</color>
+</resources>

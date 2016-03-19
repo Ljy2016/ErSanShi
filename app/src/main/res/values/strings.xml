@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">ErSanShi</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_serach">搜索</string>
+    <string name="action_login">登录</string>
+    <string name="action_login_out">登出</string>
+    <string name="action_about">关于</string>
+    <string name="search_hint">搜索记事</string>
+    <string name="action_switch_view">切换视图</string>
+
+    <string name="open">菜单</string>
+    <string name="close">记事本</string>
+
+    <string name="item_menu_1">记事</string>
+    <string name="item_menu_2">提醒</string>
+    <string name="item_menu_3">回收站</string>
+    <string name="item_menu_4">设置</string>
+    <string name="item_menu_5">同步</string>
+    <string name="item_menu_6">帮助</string>
+
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="forgot_password">忘记密码？</string>
+    <string name="regis">注册</string>
+    <string name="loginOut">注销</string>
+    <string name="no_login">未登录</string>
+
+    <string name="signin">确定</string>
+    <string name="cancel">取消</string>
+
+    <string name="save">保存</string>
+    <string name="remove">移除</string>
+
+    <string name="record_title">标题</string>
+    <string name="record_content1">记事内容</string>
+    <string name="record_content">记事</string>
+    <string name="record_list_hint">新增清单项</string>
+    <string name="add_label">添加标签</string>
+    <string name="share_content">分享发送</string>
+    <string name="delete_record">删除记事</string>
+
+    <string name="create_new_label_edit_mode">创建新标签</string>
+    <string name="all_label">全部</string>
+
+    <string name="action_main_edit">编辑</string>
+    <string name="action_main_delete">删除</string>
+    <string name="action_main_priority">优先级</string>
+    <string name="many_view">多列视图</string>
+    <string name="single_view">单列视图</string>
+
+    <string name="sans_serif" translatable="false">sans-serif</string>
+
+
+    <string name="colorPicker_title">记事颜色</string>
+    <string name="color_swatch_description">Color %1$d</string>
+    <string name="color_swatch_description_selected">Color %1$d selected</string>
+    <string name="color_picker_default_title">Select a Color</string>
+
+    <string name="delete_snackbar_msg_success">已经删除一条记事</string>
+    <string name="delete_snackbar_msg_fail">删除失败</string>
+
+
+    <string name="menu_add_record">添加记事...</string>
+    <string name="photo">拍照</string>
+    <string name="gallery">从相册中...</string>
+</resources>

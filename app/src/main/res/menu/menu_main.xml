@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/action_search"
+        android:title="@string/action_serach"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item android:id="@+id/action_switch_view"
+        android:title="@string/action_switch_view"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_login"
+        android:title="@string/action_login"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+
+
+</menu>

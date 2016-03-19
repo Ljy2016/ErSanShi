@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:myview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/guanyuIV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tingyu3" />
+
+        <com.perfectljy.ersanshi.MyView.MyTextViewDelay
+            android:id="@+id/MyView3"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginRight="10dp"
+            android:singleLine="false"
+            android:textSize="35sp"
+            myview:myText="壮年听雨客舟中" />
+
+        <com.perfectljy.ersanshi.MyView.MyTextViewDelay
+            android:id="@+id/MyView4"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="50dp"
+            android:singleLine="false"
+            android:textSize="35sp"
+            myview:myText="江阔云低，断雁叫西风" />
+    </FrameLayout>
+</LinearLayout>
