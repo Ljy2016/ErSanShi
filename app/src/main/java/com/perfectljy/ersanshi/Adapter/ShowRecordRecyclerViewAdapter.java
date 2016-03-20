@@ -1,6 +1,10 @@
 package com.perfectljy.ersanshi.Adapter;
 
+import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.perfectljy.ersanshi.R;
+import com.perfectljy.ersanshi.Widget.MainActivity;
 import com.perfectljy.ersanshi.Widget.slideitem.ItemSlideHelper;
+import com.perfectljy.ersanshi.db.DbTask;
 import com.perfectljy.ersanshi.db.model.RecordModel;
 
 import java.util.List;
@@ -26,10 +32,12 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
     private LayoutInflater layoutInflater;
     private RecordModel recordModel;
     private RecyclerView mRecyclerView;
+    private Context context;
 
     public ShowRecordRecyclerViewAdapter(Context context, List<RecordModel> recordModelList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.recordModelList = recordModelList;
+        this.context = context;
     }
 
     @Override
@@ -53,8 +61,8 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
             holder.deleteLL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos=holder.getLayoutPosition();
-                    onClickListene.onDeleteClick(holder.itemView,pos);
+                    int pos = holder.getLayoutPosition();
+                    onClickListene.onDeleteClick(holder.itemView, pos);
                 }
             });
             holder.showLL.setOnLongClickListener(new View.OnLongClickListener() {
@@ -129,6 +137,19 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
 
     public void setOnItemClickListene(OnClickListener onItemClickListene) {
         this.onClickListene = onItemClickListene;
+    }
+
+    //item的增加 删除
+    public void addItem(int position) {
+        notifyItemInserted(position);
+    }
+
+    public void deleteItem(int position) {
+        String[] ids=new String[]{recordModelList.get(position).getId()};
+        DbTask task = new DbTask(context, DbTask.dbType.DELETE);
+        task.execute(ids);
+        recordModelList.remove(position);
+        notifyItemRemoved(position);
     }
 
     //自定义viewholder

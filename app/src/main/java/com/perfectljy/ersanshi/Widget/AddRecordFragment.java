@@ -103,7 +103,7 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
             case R.id.save_record:
                 setModel();
                 ContentResolver resolver = this.getActivity().getContentResolver();
-                Uri uri = resolver.insert(recordModel.getContentUri(), recordModel.values());
+                resolver.insert(recordModel.getContentUri(), recordModel.values());
                 notifyRecordChange();
                 getActivity().onBackPressed();
                 break;

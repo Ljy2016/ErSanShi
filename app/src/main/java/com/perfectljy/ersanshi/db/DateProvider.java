@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import com.perfectljy.ersanshi.Common.Constants;
 import com.perfectljy.ersanshi.Utils.LogUtil;
 import com.perfectljy.ersanshi.db.model.RecordColumns;
-import com.perfectljy.ersanshi.db.model.RecordModel;
 import com.perfectljy.ersanshi.db.model.SafeColimns;
 
 import java.util.List;
@@ -26,13 +25,13 @@ public class DateProvider extends ContentProvider implements IDataProvider {
     private SQLiteHelper dbHelper;
     private static final UriMatcher mUriMatcher;
     private static final int SAFE_CHECK = 1;
-    private static final int ADD_REACORD = 2;
+    private static final int REACORD = 2;
     private static final String TAG = "DateProvider";
 
     static {
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(Constants.AUTHORITY, SafeColimns.TABLE_NAME, SAFE_CHECK);
-        mUriMatcher.addURI(Constants.AUTHORITY, RecordColumns.TABLE_NAME, ADD_REACORD);
+        mUriMatcher.addURI(Constants.AUTHORITY, RecordColumns.TABLE_NAME, REACORD);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class DateProvider extends ContentProvider implements IDataProvider {
             case SAFE_CHECK:
                 return queryAllList(uri, projection, selection, selectionArgs, sortOrder);
 
-            case ADD_REACORD:
+            case REACORD:
                 return queryAllList(uri, projection, selection, selectionArgs, sortOrder);
             default:
                 throw new IllegalArgumentException("unknow uri:" + uri);
@@ -69,7 +68,7 @@ public class DateProvider extends ContentProvider implements IDataProvider {
             case SAFE_CHECK:
                 insertItemByUri(uri, values);
                 return uri;
-            case ADD_REACORD:
+            case REACORD:
                 insertItemByUri(uri, values);
                 return uri;
             default:
@@ -82,6 +81,8 @@ public class DateProvider extends ContentProvider implements IDataProvider {
         switch (mUriMatcher.match(uri)) {
             case SAFE_CHECK:
                 return deleteItemByCondition(uri, selection, selectionArgs);
+            case REACORD:
+                return deleteItemByCondition(uri,selection,selectionArgs);
             default:
                 throw new IllegalArgumentException(" Unknown URI: " + uri);
         }

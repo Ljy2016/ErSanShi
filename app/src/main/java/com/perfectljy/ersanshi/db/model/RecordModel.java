@@ -85,6 +85,7 @@ public class RecordModel extends BaseModel {
     public ContentValues values() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(RecordColumns.TITLE, title);
+        contentValues.put(RecordColumns._ID, id);
         contentValues.put(RecordColumns.DATE, date);
         contentValues.put(RecordColumns.WEATHER, weather);
         contentValues.put(RecordColumns.CONTENT, content);

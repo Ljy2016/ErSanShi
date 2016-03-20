@@ -1,11 +1,15 @@
 package com.perfectljy.ersanshi.Widget;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -74,6 +78,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         mToolbar.setSubtitle("I am so happy");
         mToolbar.setOnMenuItemClickListener(onMenuItemClick);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         resolver = getContentResolver();
         Cursor cursor = resolver.query(RecordColumns.CONTENT_URI, null, null, null, null);
         recordModelList = getModels(cursor);
@@ -92,8 +97,15 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
             }
 
             @Override
-            public void onDeleteClick(View view, int position) {
-                Toast.makeText(mContext, "delete    ", Toast.LENGTH_SHORT).show();
+            public void onDeleteClick(View view, final int position) {
+
+                new AlertDialog.Builder(MainActivity.this).setTitle("确定要删除吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.deleteItem(position);
+                    }
+                }).setNegativeButton("取消", null).show();
+
             }
 
             @Override
