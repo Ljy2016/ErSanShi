@@ -82,7 +82,7 @@ public class DateProvider extends ContentProvider implements IDataProvider {
             case SAFE_CHECK:
                 return deleteItemByCondition(uri, selection, selectionArgs);
             case REACORD:
-                return deleteItemByCondition(uri,selection,selectionArgs);
+                return deleteItemByCondition(uri, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException(" Unknown URI: " + uri);
         }
@@ -93,6 +93,8 @@ public class DateProvider extends ContentProvider implements IDataProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         switch (mUriMatcher.match(uri)) {
             case SAFE_CHECK:
+                return updateItemByCondition(uri, values, selection, selectionArgs);
+            case REACORD:
                 return updateItemByCondition(uri, values, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException(" Unknown URI: " + uri);

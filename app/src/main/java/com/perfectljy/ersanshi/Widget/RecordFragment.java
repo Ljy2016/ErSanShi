@@ -31,14 +31,23 @@ import static com.perfectljy.ersanshi.R.id.title;
  * Created by PerfectLjy on 2016/3/17.
  */
 
-public class AddRecordFragment extends BaseObserverFragment implements DateFragment.OnTimeSetListener {
+public class RecordFragment extends BaseObserverFragment implements DateFragment.OnTimeSetListener {
+    //判断是添加记录还是删除记录
+    private static int ISUPDATA = 0;
     private Button addRecord;
     private EditText title;
     private TextView date;
     private EditText weather;
     private EditText content;
-    private RecordModel recordModel = new RecordModel();
+    private RecordModel recordModel;
     private long mAlarmsTime = 0;
+
+    public RecordFragment() {
+    }
+
+    public RecordFragment(RecordModel recordModel) {
+        this.recordModel = recordModel;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +82,18 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
 
     @Override
     public void initView() {
-
+        //判空  如果为空则说明fragment由无参构造方法创建  即由添加记录的按钮触发的事件 反之则为recyclerview 的item点击事件
+        if (recordModel != null) {
+            title.setText(recordModel.getTitle());
+            date.setText(recordModel.getDate());
+            weather.setText(recordModel.getWeather());
+            content.setText(recordModel.getContent());
+            addRecord.setText("保存编辑");
+            ISUPDATA = 1;
+        } else {
+            recordModel = new RecordModel();
+            ISUPDATA = 0;
+        }
     }
 
     @Override
@@ -88,7 +108,6 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
         date.setOnClickListener(this);
 
 
-
     }
 
     @Override
@@ -101,17 +120,43 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
         int id = v.getId();
         switch (id) {
             case R.id.save_record:
-                setModel();
-                ContentResolver resolver = this.getActivity().getContentResolver();
-                resolver.insert(recordModel.getContentUri(), recordModel.values());
-                notifyRecordChange();
-                getActivity().onBackPressed();
-                break;
+                //如果是添加事件
+                if (ISUPDATA == 0) {
+                    setModel();
+                    ContentResolver resolver = this.getActivity().getContentResolver();
+                    resolver.insert(recordModel.getContentUri(), recordModel.values());
+                    notifyRecordChange();
+                    getActivity().onBackPressed();
+                    break;
+                } else {
+                    //如果记录被修改
+                    if (chackIsUpdata()) {
+                        setModel();
+                        ContentResolver resolver = this.getActivity().getContentResolver();
+                        resolver.update(recordModel.getContentUri(), recordModel.values(), "_id=?", new String[]{recordModel.getId()});
+                        notifyRecordChange();
+                    }
+                    getActivity().onBackPressed();
+                    break;
+                }
             case R.id.alarm_date_tv:
-                Toast.makeText(getActivity(), "tt", Toast.LENGTH_SHORT).show();
                 showDateDialog();
                 break;
         }
+    }
+
+    //判断记录是否被修改
+    private boolean chackIsUpdata() {
+        String mTitle = title.getText().toString();
+        String mData = date.getText().toString();
+        String mWeather = weather.getText().toString();
+        String mContent = content.getText().toString();
+        if (mTitle.equals(recordModel.getTitle()) && mData.equals(recordModel.getDate()) && mWeather.equals(recordModel.getWeather()) && mContent.equals(recordModel.getContent())) {
+            return false;
+        }
+        return true;
+
+
     }
 
     private void notifyRecordChange() {
@@ -137,7 +182,7 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
 
     @Override
     public void onInitDateTimeSet(DatePicker datePicker, TimePicker timePicker) {
-        if(mAlarmsTime!=0){
+        if (mAlarmsTime != 0) {
             Calendar dateTime = Calendar.getInstance();
             dateTime.setTimeInMillis(mAlarmsTime);
             int year = dateTime.get(Calendar.YEAR);
@@ -145,8 +190,8 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
             int day = dateTime.get(Calendar.DAY_OF_MONTH);
             int hourOfDay = dateTime.get(Calendar.HOUR_OF_DAY);
             int minute = dateTime.get(Calendar.MINUTE);
-            if(datePicker!=null && timePicker!=null){
-                datePicker.updateDate(year,month,day);
+            if (datePicker != null && timePicker != null) {
+                datePicker.updateDate(year, month, day);
                 timePicker.setIs24HourView(true);
                 timePicker.setCurrentHour(hourOfDay);
                 timePicker.setCurrentMinute(minute);
@@ -157,7 +202,7 @@ public class AddRecordFragment extends BaseObserverFragment implements DateFragm
     @Override
     public void onDateTimeSet(int year, int month, int day, int hourOfDay, int minute) {
         Calendar dateTime = Calendar.getInstance();
-        dateTime.set(year,month,day,hourOfDay,hourOfDay,minute);
+        dateTime.set(year, month, day, hourOfDay, hourOfDay, minute);
         mAlarmsTime = dateTime.getTimeInMillis();
         date.setText(year + "年" + (month + 1) + "月" + day + "日" + " " + hourOfDay + ":" + minute);
     }

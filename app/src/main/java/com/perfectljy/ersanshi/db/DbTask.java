@@ -36,10 +36,8 @@ public class DbTask extends AsyncTask<String, Integer, byte[]> {
                 break;
             case DELETE:
                 contentResolver.delete(RecordColumns.CONTENT_URI, "_id=?", params);
-                Log.d("123", "doInBackground: " + params[0]);
                 break;
         }
-
         return null;
     }
 

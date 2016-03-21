@@ -55,7 +55,9 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
                 @Override
                 public void onClick(View v) {
                     int pos = holder.getLayoutPosition();
+                    holder.itemView.setTag(recordModelList.get(pos));
                     onClickListene.onShowClick(holder.itemView, pos);
+
                 }
             });
             holder.deleteLL.setOnClickListener(new View.OnClickListener() {

@@ -4,12 +4,12 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -40,14 +40,18 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView addRecord;
-    private AddRecordFragment addRecordFragment;
+    private RecordFragment recordFragment;
     private LinearLayout mRecordContentLy;
     private int mCurrentFragment;
     private final static int MAIN = 0;
     private final static int ADDRECORD = 1;
+    private static int VIEWCHAMGE = 0;
     private List<RecordModel> recordModelList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
+    private GridLayoutManager gridLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
+
     private ShowRecordRecyclerViewAdapter adapter;
     ContentResolver resolver;
 
@@ -57,7 +61,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setDrawer();
-
+        mToolbar.setOnMenuItemClickListener(onMenuItemClick);
     }
 
     @Override
@@ -67,16 +71,18 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         mRecordContentLy = (LinearLayout) findViewById(R.id.detail_ll);
         recyclerView = (RecyclerView) findViewById(R.id.show_record_recyclerviews);
         layoutManager = new LinearLayoutManager(this);
+        gridLayoutManager = new GridLayoutManager(this,2);
+        dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
     protected void initView() {
         mToolbar.setTitle("我的日记");
         mToolbar.setSubtitle("I am so happy");
-        mToolbar.setOnMenuItemClickListener(onMenuItemClick);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         resolver = getContentResolver();
@@ -93,7 +99,13 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         adapter.setOnItemClickListene(new ShowRecordRecyclerViewAdapter.OnClickListener() {
             @Override
             public void onShowClick(View view, int position) {
-                Toast.makeText(mContext, "show", Toast.LENGTH_SHORT).show();
+                RecordModel recordModel = (RecordModel) view.getTag();
+                mRecordContentLy.setVisibility(View.VISIBLE);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
+                recordFragment = new RecordFragment(recordModel);
+                ft.addToBackStack(null);
+                ft.replace(R.id.detail_ll, recordFragment, "").commit();
             }
 
             @Override
@@ -105,7 +117,6 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
                         adapter.deleteItem(position);
                     }
                 }).setNegativeButton("取消", null).show();
-
             }
 
             @Override
@@ -113,6 +124,19 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
                 Toast.makeText(mContext, "删除日记", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (IsDoubleClick.isFastDoubleClick()) {
+            return;
+        }
+        mRecordContentLy.setVisibility(View.VISIBLE);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
+        recordFragment = new RecordFragment();
+        ft.addToBackStack(null);
+        ft.replace(R.id.detail_ll, recordFragment, "").commit();
     }
 
     @Override
@@ -138,18 +162,6 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         };
     }
 
-    @Override
-    public void onClick(View v) {
-        if (IsDoubleClick.isFastDoubleClick()) {
-            return;
-        }
-        mRecordContentLy.setVisibility(View.VISIBLE);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
-        addRecordFragment = new AddRecordFragment();
-        ft.addToBackStack(null);
-        ft.replace(R.id.detail_ll, addRecordFragment, "").commit();
-    }
 
     private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
         @Override
@@ -157,6 +169,16 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
             String msg = "";
             switch (menuItem.getItemId()) {
 
+                case R.id.action_switch_view:
+                    if (VIEWCHAMGE == 0) {
+                        recyclerView.setLayoutManager(gridLayoutManager);
+                        msg="表格布局";
+                        VIEWCHAMGE = 1;
+                    } else {
+                        recyclerView.setLayoutManager(layoutManager);
+                        msg="纵向布局";
+                        VIEWCHAMGE = 0;
+                    }
             }
 
             if (!msg.equals("")) {
@@ -186,11 +208,11 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
     private void setBackStackPressed() {
         switch (mCurrentFragment) {
             case ADDRECORD:
-                if (addRecordFragment != null) {
+                if (recordFragment != null) {
 //                    addRecordFragment.saveOrUpdateRecordToDb();
                 }
                 getFragmentManager().popBackStack();
-                addRecordFragment = null;//设置为NULL，让下一次进入界面的时候重新渲染
+                recordFragment = null;//设置为NULL，让下一次进入界面的时候重新渲染
                 setStatusBarView(getResources().getColor(R.color.main_bg));
                 hideKeyBoard();
                 bindMainToolBar();
