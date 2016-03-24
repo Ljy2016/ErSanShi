@@ -6,7 +6,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -51,7 +53,9 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return super.onCreateView(inflater, container, savedInstanceState);
+
     }
 
     @Override
@@ -76,12 +80,12 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         date = (TextView) view.findViewById(alarm_date_tv);
         weather = (EditText) view.findViewById(R.id.add_weather_et);
         content = (EditText) view.findViewById(R.id.record_content_et);
-
-
+        mFragmentToolBar = (Toolbar) view.findViewById(R.id.fragment_toolbar);
     }
 
     @Override
     public void initView() {
+
         //判空  如果为空则说明fragment由无参构造方法创建  即由添加记录的按钮触发的事件 反之则为recyclerview 的item点击事件
         if (recordModel != null) {
             title.setText(recordModel.getTitle());
@@ -89,8 +93,10 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
             weather.setText(recordModel.getWeather());
             content.setText(recordModel.getContent());
             addRecord.setText("保存编辑");
+            setFragmentToolBarTitle("编辑日记");
             ISUPDATA = 1;
         } else {
+           mFragmentToolBar.setTitle("创建日记");
             recordModel = new RecordModel();
             ISUPDATA = 0;
         }
@@ -206,4 +212,6 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         mAlarmsTime = dateTime.getTimeInMillis();
         date.setText(year + "年" + (month + 1) + "月" + day + "日" + " " + hourOfDay + ":" + minute);
     }
+
+
 }
