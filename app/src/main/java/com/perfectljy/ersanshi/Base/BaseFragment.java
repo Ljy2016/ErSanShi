@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 
 import com.perfectljy.ersanshi.R;
@@ -21,11 +23,16 @@ import com.perfectljy.ersanshi.R;
  * @version 1.0
  * @since 2015-08-31  14:04
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener,OnTouchListener {
     private static final String TAG = "BaseFragment";
     protected View mLayoutView;
     private boolean mIsInitDate = false;
     protected Toolbar mFragmentToolBar;//详情页面的toolbar。因为需要toolbar的动画效果，所以可以不使用main页面的toolbar
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             initSvgView();
             initView();
             setOnClick();
+            mLayoutView.setOnTouchListener(this);
         }
         return mLayoutView;
     }
@@ -68,9 +76,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             ((AppCompatActivity) getActivity()).setSupportActionBar(mFragmentToolBar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-            upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
+mFragmentToolBar.dismissPopupMenus();
             onFragmentBack();
         }
     }
