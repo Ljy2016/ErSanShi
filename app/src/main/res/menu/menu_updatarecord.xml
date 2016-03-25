@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/action_safe"
+        android:title="加密"
+        app:showAsAction="collapseActionView|ifRoom"
+        />
+
+    <item android:id="@+id/action_switch_paper"
+        android:title="切换纸张"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_share"
+        android:title="分享"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+
+
+</menu>
