@@ -53,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         iniToolBar();
         setBackListener();
         setOnClick();
-        setStatusBarView(getResources().getColor(R.color.main_bg));
+        setStatusBarView(R.drawable.toolbar_type1);
     }
 
     protected boolean hasToolBar(){

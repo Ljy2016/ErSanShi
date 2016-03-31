@@ -28,7 +28,7 @@ public class ItemSlideHelper implements RecyclerView.OnItemTouchListener, Gestur
     private int mLastX;
     private int mLastY;
 
-
+//是否拖动
     private boolean mIsDragging;
 
     private Animator mExpandAndCollapseAnim;
@@ -247,7 +247,7 @@ public class ItemSlideHelper implements RecyclerView.OnItemTouchListener, Gestur
         int scrollX = mTargetView.getScrollX();
         int scrollRange = getHorizontalRange();
 
-        if (mExpandAndCollapseAnim != null)
+        if (mExpandAndCollapseAnim != null)//动画执行期间返回
             return false;
 
 
@@ -257,7 +257,7 @@ public class ItemSlideHelper implements RecyclerView.OnItemTouchListener, Gestur
         if (velocityX == 0) {
             //如果已经展一半，平滑展开
             if (scrollX > scrollRange / 2) {
-                to = scrollRange;
+                to = 0;
             }
         } else {
 

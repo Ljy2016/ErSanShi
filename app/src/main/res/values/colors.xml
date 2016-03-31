@@ -3,11 +3,11 @@
     <color name="colorPrimary">#fff333</color>
     <color name="colorPrimaryDark">#33ff33</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="main_bg">#039aaa</color>
+    <color name="main_bg">#99ffcc </color>
     <color name="white">#ffffff</color>
     <color name="black">#263238</color>
     <color name="light_black">#616161</color>
-    <color name="light_gray">#CFD8DC</color>
+    <color name="light_gray">#00CFD8DC</color>
 
     <color name="list_title">#424242</color>
     <color name="list_subtitle">#828282</color>

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/fragment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="center"
         android:gravity="center"
-        android:background="@drawable/toolbar_type1" />
+        android:background="@color/main_bg" />
 </LinearLayout>
