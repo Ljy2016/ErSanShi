@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,14 +51,12 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (onClickListene != null) {
-
             holder.showLL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = holder.getLayoutPosition();
                     holder.itemView.setTag(recordModelList.get(pos));
                     onClickListene.onShowClick(holder.itemView, pos);
-
                 }
             });
             holder.deleteLL.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +80,11 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
         holder.title.setText(recordModel.getTitle());
         holder.date.setText(recordModel.getDate());
         holder.wether.setText(recordModel.getWeather());
+        //如果加密记录  则显示加密图标
+        if(recordModel.getIsSecart()==1)
+        {
+            holder.isSecret.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -159,6 +163,7 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
         public TextView title;
         public TextView date;
         public TextView wether;
+        public ImageView isSecret;
         private LinearLayout showLL;
         private LinearLayout deleteLL;
 
@@ -169,6 +174,7 @@ public class ShowRecordRecyclerViewAdapter extends RecyclerView.Adapter<ShowReco
             date = (TextView) view.findViewById(R.id.record_date_tv);
             showLL = (LinearLayout) view.findViewById(R.id.record_show_ll);
             deleteLL = (LinearLayout) view.findViewById(R.id.record_delete_ll);
+            isSecret= (ImageView) view.findViewById(R.id.secret_imageview);
         }
     }
 }

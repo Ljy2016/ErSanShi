@@ -1,9 +1,12 @@
 package com.perfectljy.ersanshi.Widget;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +42,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseObserverActivity implements View.OnClickListener {
+    private Boolean isRight = true;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView addRecord;
     private RecordFragment recordFragment;
+    private RecordModel recordModel;
     private LinearLayout mRecordContentLy;
     //用于判断当前显示的view是哪个，并根据它来调整toolbar工具栏显示的内容。
     private int mCurrentFragment;
@@ -54,11 +60,10 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
     private LinearLayoutManager layoutManager;
     private GridLayoutManager gridLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
-
-
     private ShowRecordRecyclerViewAdapter adapter;
     ContentResolver resolver;
-
+    EditText inputSever;
+    AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         mToolbar.setOnMenuItemClickListener(onMenuItemClick);
     }
 
+
     @Override
     protected void findView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.left_menu_dl);
@@ -75,7 +81,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         mRecordContentLy = (LinearLayout) findViewById(R.id.detail_ll);
         recyclerView = (RecyclerView) findViewById(R.id.show_record_recyclerviews);
         layoutManager = new LinearLayoutManager(this);
-        gridLayoutManager = new GridLayoutManager(this,2);
+        gridLayoutManager = new GridLayoutManager(this, 2);
         dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -103,17 +109,41 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         adapter.setOnItemClickListene(new ShowRecordRecyclerViewAdapter.OnClickListener() {
             @Override
             public void onShowClick(View view, int position) {
-                if(recordFragment!=null){
+                if (recordFragment != null) {
                     return;
                 }
-                mCurrentFragment=UPDATARECORD;
-                RecordModel recordModel = (RecordModel) view.getTag();
-                mRecordContentLy.setVisibility(View.VISIBLE);
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
-                recordFragment = new RecordFragment(recordModel);
-                ft.addToBackStack(null);
-                ft.replace(R.id.detail_ll, recordFragment, "").commit();
+                recordModel = (RecordModel) view.getTag();
+                if (recordModel.getIsSecart() == 1) {
+
+                    inputSever = new EditText(MainActivity.this);
+                    dialog = new AlertDialog.Builder(MainActivity.this).setTitle("请输入密码").setView(inputSever).setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String password = inputSever.getText().toString();
+                            SharedPreferences sharedPreferences = getSharedPreferences("myPassword", Context.MODE_PRIVATE);
+                            if (password.equals(sharedPreferences.getString("password", ""))) {
+                                mCurrentFragment = UPDATARECORD;
+                                mRecordContentLy.setVisibility(View.VISIBLE);
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
+                                recordFragment = new RecordFragment(recordModel);
+                                ft.addToBackStack(null);
+                                ft.replace(R.id.detail_ll, recordFragment, "").commit();
+                            } else {
+                                Toast.makeText(mContext, "密码错误", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    }).show();
+                } else {
+                    mCurrentFragment = UPDATARECORD;
+                    mRecordContentLy.setVisibility(View.VISIBLE);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
+                    recordFragment = new RecordFragment(recordModel);
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.detail_ll, recordFragment, "").commit();
+                }
             }
 
             @Override
@@ -139,7 +169,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
         if (IsDoubleClick.isFastDoubleClick()) {
             return;
         }
-        mCurrentFragment=ADDRECORD;
+        mCurrentFragment = ADDRECORD;
         mRecordContentLy.setVisibility(View.VISIBLE);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit, R.anim.fragment_bottom_enter, R.anim.fragment_bottom_exit);
@@ -181,17 +211,17 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
                 case R.id.action_switch_view:
                     if (VIEWCHAMGE == 0) {
                         recyclerView.setLayoutManager(gridLayoutManager);
-                        msg="表格布局";
+                        msg = "表格布局";
                         VIEWCHAMGE = 1;
                     } else {
                         recyclerView.setLayoutManager(layoutManager);
-                        msg="纵向布局";
+                        msg = "纵向布局";
                         VIEWCHAMGE = 0;
                     }
             }
 
             if (!msg.equals("")) {
-                Toast.makeText(MainActivity.this,msg , Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
             return true;
         }
@@ -201,16 +231,15 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        switch (mCurrentFragment)
-        {
+        switch (mCurrentFragment) {
             case MAIN:
                 getMenuInflater().inflate(R.menu.menu_main, menu);
                 break;
             case ADDRECORD:
-                getMenuInflater().inflate(R.menu.menu_addrecord,menu);
+                getMenuInflater().inflate(R.menu.menu_addrecord, menu);
                 break;
             case UPDATARECORD:
-                getMenuInflater().inflate(R.menu.menu_updatarecord,menu);
+                getMenuInflater().inflate(R.menu.menu_updatarecord, menu);
                 break;
         }
 
@@ -240,7 +269,7 @@ public class MainActivity extends BaseObserverActivity implements View.OnClickLi
 //                bindMainToolBar();
                 break;
             default:
-                recordFragment=null;
+                recordFragment = null;
                 getFragmentManager().popBackStack();
                 break;
         }

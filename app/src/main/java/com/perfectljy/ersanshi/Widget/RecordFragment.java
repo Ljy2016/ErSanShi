@@ -8,12 +8,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,9 +37,11 @@ import static com.perfectljy.ersanshi.R.id.title;
  * Created by PerfectLjy on 2016/3/17.
  */
 
-public class RecordFragment extends BaseObserverFragment implements DateFragment.OnTimeSetListener {
+public class RecordFragment extends BaseObserverFragment implements DateFragment.OnTimeSetListener, Toolbar.OnMenuItemClickListener {
     //判断是添加记录还是删除记录
     private static int ISUPDATA = 0;
+    private static int ISSECRET = 0;
+
     private Button addRecord;
     private EditText title;
     private TextView date;
@@ -43,6 +49,7 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
     private EditText content;
     private RecordModel recordModel;
     private long mAlarmsTime = 0;
+    private ImageView secretImageView;
 
     public RecordFragment() {
     }
@@ -53,7 +60,6 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         return super.onCreateView(inflater, container, savedInstanceState);
 
     }
@@ -81,11 +87,12 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         weather = (EditText) view.findViewById(R.id.add_weather_et);
         content = (EditText) view.findViewById(R.id.record_content_et);
         mFragmentToolBar = (Toolbar) view.findViewById(R.id.fragment_toolbar);
+        secretImageView = (ImageView) view.findViewById(R.id.secret_imageview);
     }
 
     @Override
     public void initView() {
-
+        mFragmentToolBar.setOnMenuItemClickListener(this);
         //判空  如果为空则说明fragment由无参构造方法创建  即由添加记录的按钮触发的事件 反之则为recyclerview 的item点击事件
         if (recordModel != null) {
             title.setText(recordModel.getTitle());
@@ -96,10 +103,11 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
             setFragmentToolBarTitle("编辑日记");
             ISUPDATA = 1;
         } else {
-           mFragmentToolBar.setTitle("创建日记");
+            mFragmentToolBar.setTitle("创建日记");
             recordModel = new RecordModel();
             ISUPDATA = 0;
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -157,7 +165,7 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         String mData = date.getText().toString();
         String mWeather = weather.getText().toString();
         String mContent = content.getText().toString();
-        if (mTitle.equals(recordModel.getTitle()) && mData.equals(recordModel.getDate()) && mWeather.equals(recordModel.getWeather()) && mContent.equals(recordModel.getContent())) {
+        if (mTitle.equals(recordModel.getTitle()) && mData.equals(recordModel.getDate()) && mWeather.equals(recordModel.getWeather()) && mContent.equals(recordModel.getContent()) && ISSECRET == recordModel.getIsSecart()) {
             return false;
         }
         return true;
@@ -178,6 +186,7 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         recordModel.setDate(rDate);
         recordModel.setWeather(rWeather);
         recordModel.setContent(rContent);
+        recordModel.setIsSecart(ISSECRET);
     }
 
     private void showDateDialog() {
@@ -213,5 +222,29 @@ public class RecordFragment extends BaseObserverFragment implements DateFragment
         date.setText(year + "年" + (month + 1) + "月" + day + "日" + " " + hourOfDay + ":" + minute);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (recordModel.getIsSecart()==1) {
+            menu.findItem(R.id.action_safe).setTitle("解除加密");
+            ISSECRET = 1;
+        }
 
+    }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_safe:
+                if (ISSECRET == 0) {
+                    item.setTitle("解除加密");
+                    ISSECRET = 1;
+                } else {
+                    item.setTitle("加密");
+                    ISSECRET = 0;
+                }
+                break;
+        }
+        return true;
+    }
 }
